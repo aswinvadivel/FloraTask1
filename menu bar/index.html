@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Login</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="flora">
+                <h2>FLORA</h2>
+            </div>
+            <button class="menu-button" onclick="toggleMenu()">Menu</button>
+            <ul id="menu">
+                <li><a href="#">Home</a></li>
+                <li>
+                    <a href="#">Employee Details</a>
+                    <ul class="dropdown">
+                        <li><a href="#">Add Employee</a></li>
+                        <li><a href="#">Update Employee</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Attendance</a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="main-content">
+        <div class="form-container">
+            <h2>Employee Attendance Form</h2>
+            <form id="attendanceForm">
+                <label for="employee-name">Employee Name</label>
+                <input type="text" id="employee-name" name="employee-name" placeholder="Enter employee name" required>
+                <label for="entry-time">Entry Time</label>
+                <input type="time" id="entry-time" name="entry-time" required>
+                <label for="exit-time">Exit Time</label>
+                <input type="time" id="exit-time" name="exit-time" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('active');
+        }
+
+        
+       document.getElementById('attendanceForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const employeeName = document.getElementById('employee-name').value;
+    const entryTime = document.getElementById('entry-time').value;
+    const exitTime = document.getElementById('exit-time').value;
+
+    const attendanceData = {
+        name: employeeName,
+        entryTime: entryTime,
+        exitTime: exitTime
+    };
+
+    try {
+        const response = await fetch('http://localhost:8080/api/employees', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(attendanceData)
+        });
+
+        if (response.ok) {
+            const result = await response.text();
+            alert(result);
+        } else {
+            throw new Error('Failed to submit attendance.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while submitting attendance.');
+    }
+});
+
+    </script>
+</body>
+</html>
